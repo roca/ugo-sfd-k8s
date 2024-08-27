@@ -8,4 +8,10 @@ SHELL = $(if $(wildcard $(SHELL_PATH)),/bin/ash,/bin/bash)
 # 	$ openssl rsa -pubout -in private.pem -out public.pem
 
 run:
-	go run apis/services/sales/main.go
+	go run apis/services/sales/main.go | go run apis/tooling/logfmt/main.go
+# ==============================================================================
+#  Modules support
+
+tidy:
+	go mod tidy
+	GOWORK=off go mod vendor
