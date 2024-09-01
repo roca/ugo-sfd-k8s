@@ -10,10 +10,6 @@ spec:
   strategy:
     type: Recreate
   
-  selector:
-    matchLabels:
-      app: sales
-
   template:
     metadata:
       labels:
@@ -21,3 +17,13 @@ spec:
     spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
+
+      # containers:
+      # - name: sales
+      #   resources:
+      #     requests:
+      #       cpu: "250m"     # I need access to 25ms/100ms on one core
+      #       memory: "36Mi"  # Use this same value for limits
+      #     limits:
+      #       cpu: "250m"     # Execute instructions 25ms/100ms on one core
+      #       memory: "36Mi"  # Match the requests value

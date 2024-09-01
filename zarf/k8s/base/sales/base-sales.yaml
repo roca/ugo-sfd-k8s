@@ -23,21 +23,15 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
 
-      initContainers:
-      - name: init-migrate-seed
-        image: sales-image
-        command: ['./admin']
-
       containers:
       - name: sales
         image: sales-image
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+
+        # ports:
+        # - name: sales
+        #   containerPort: 3000
+        # - name: sales-debug
+        #   containerPort: 3010
 
 ---
 
