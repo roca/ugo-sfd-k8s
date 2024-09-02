@@ -89,7 +89,7 @@ dev-update: build dev-load dev-restart
 dev-update-apply: build dev-load dev-apply
 
 dev-logs:
-	kubectl logs --namespace=$(NAMESPACE) -l app=$(SALES_APP) --all-containers=true -f --tail=100 --max-log-requests=6 | go run apis/services/sales/main.go -service=$(SALES_APP)
+	kubectl logs --namespace=$(NAMESPACE) -l app=$(SALES_APP) --all-containers=true -f --tail=100 --max-log-requests=6 | go run apis/tooling/logfmt/main.go -service=$(SALES_APP)
 
 dev-describe-deployment:
 	kubectl describe deployment --namespace=$(NAMESPACE) $(SALES_APP)
