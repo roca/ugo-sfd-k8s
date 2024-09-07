@@ -42,6 +42,36 @@ AUTH_IMAGE      := $(BASE_IMAGE_NAME)/$(AUTH_APP):$(VERSION)
 # VERSION       := "0.0.1-$(shell git rev-parse --short HEAD)"
 
 # ==============================================================================
+# Install dependencies
+
+dev-gotooling:
+	go install github.com/divan/expvarmon@latest
+	go install github.com/rakyll/hey@latest
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+
+dev-brew:
+	brew update
+	brew list kind || brew install kind
+	brew list kubectl || brew install kubectl
+	brew list kustomize || brew install kustomize
+	brew list pgcli || brew install pgcli
+	brew list watch || brew install watch
+
+dev-docker:
+	docker pull $(GOLANG) & \
+	docker pull $(ALPINE) & \
+	docker pull $(KIND) & \
+	docker pull $(POSTGRES) & \
+	docker pull $(GRAFANA) & \
+	docker pull $(PROMETHEUS) & \
+	docker pull $(TEMPO) & \
+	docker pull $(LOKI) & \
+	docker pull $(PROMTAIL) & \
+	wait;
+
+# ==============================================================================
 # Building containers
 
 build: sales
@@ -103,6 +133,14 @@ dev-describe-deployment:
 dev-describe-sales:
 	kubectl describe pod --namespace=$(NAMESPACE) -l app=$(SALES_APP)
 
+# ==============================================================================
+# Metrics and Tracing
+
+metrics:
+	expvarmon -ports="localhost:3010" -vars="build,requests,goroutines,errors,panics,mem:memstats.HeapAlloc,mem:memstats.HeapSys,mem:memstats.Sys"
+	
+statsviz:
+	open http://localhost:3010/debug/statsviz
 # ==============================================================================
 #  Modules support
 
