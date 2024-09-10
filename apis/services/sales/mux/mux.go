@@ -19,6 +19,7 @@ func WebAPI() *http.ServeMux {
 		}
 
 		json.NewEncoder(w).Encode(status)
+	}
 
 	mux.HandleFunc("GET /test", h)
 
