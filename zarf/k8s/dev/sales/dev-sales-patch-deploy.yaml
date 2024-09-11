@@ -20,19 +20,6 @@ spec:
 
       containers:
       - name: sales
-
-        ports:
-        - name: sales
-          containerPort: 3000
-        - name: sales-debug
-          containerPort: 3010
-        resources:
-          requests:
-            cpu: "250m"     # I need access to 25ms/100ms on one core
-            memory: "36Mi"  # Use this same value for limits
-          limits:
-            cpu: "250m"     # Execute instructions 25ms/100ms on one core
-            memory: "36Mi"  # Match the requests value
 # CPU Limits
 #
 # The request value helps K8s determine what node a POD can be run on by making
