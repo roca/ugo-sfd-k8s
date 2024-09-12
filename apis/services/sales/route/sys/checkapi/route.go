@@ -1,8 +1,8 @@
 package checkapi
 
-import "net/http"
+import "github.com/roca/ugo-sfd-k8s/foundation/web"
 
-func Routes(mux *http.ServeMux) {
-	mux.HandleFunc("GET /liveliness", liveliness)
-	mux.HandleFunc("GET /readiness", readiness)
+func Routes(app *web.App) {
+	app.HandleFunc("GET /liveliness", liveliness)
+	app.HandleFunc("GET /readiness", readiness)
 }
