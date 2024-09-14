@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
-	"github.com/roca/ugo-sfd-k8s/apis/services/sales/mux"
 	"github.com/roca/ugo-sfd-k8s/apis/services/api/sdk/http/debug"
+	"github.com/roca/ugo-sfd-k8s/apis/services/sales/mux"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
 )
 
@@ -114,7 +114,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      mux.WebAPI(shutdown),
+		Handler:      mux.WebAPI(log, shutdown),
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,
