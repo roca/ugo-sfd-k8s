@@ -16,6 +16,7 @@ import (
 	"github.com/roca/ugo-sfd-k8s/apis/services/api/debug"
 	"github.com/roca/ugo-sfd-k8s/apis/services/sales/mux"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
+	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
 
 var build = "develop"
@@ -30,7 +31,7 @@ func main() {
 	}
 
 	traceIDFn := func(ctx context.Context) string {
-		return "" //web.GetTraceID(ctx)
+		return web.GetTraceID(ctx)
 	}
 
 	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "SALES", traceIDFn, events)
