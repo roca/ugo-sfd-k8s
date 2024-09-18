@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
-	"github.com/roca/ugo-sfd-k8s/apis/services/api/sdk/http/debug"
+	"github.com/roca/ugo-sfd-k8s/apis/services/api/debug"
 	"github.com/roca/ugo-sfd-k8s/apis/services/sales/mux"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
 )
