@@ -6,4 +6,5 @@ func Routes(app *web.App) {
 	app.HandleFunc("GET /liveliness", liveliness)
 	app.HandleFunc("GET /readiness", readiness)
 	app.HandleFunc("GET /testerror", testError)
+	app.HandleFunc("GET /testpanic", testPanic)
 }
