@@ -16,8 +16,10 @@ func WebAPI(log *logger.Logger, shutdown chan os.Signal) *web.App {
 
 	loggerMiddleware := mid.Logger(log)
 	errorsMiddleware := mid.Errors(log)
+	metricsMiddleware := mid.Metrics()
 	panicMiddleware := mid.Panics()
-	mux := web.NewApp(shutdown, loggerMiddleware, errorsMiddleware, panicMiddleware)
+
+	mux := web.NewApp(shutdown, loggerMiddleware, errorsMiddleware, metricsMiddleware, panicMiddleware)
 
 	checkapi.Routes(mux)
 

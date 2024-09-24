@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"runtime/debug"
+
+	"github.com/roca/ugo-sfd-k8s/app/api/metrics"
 )
 
 // Panics recovers from panics and converts the panic to an error so it is
@@ -16,6 +18,9 @@ func Panics(ctx context.Context, handler Handler) (err error) {
 		if rec := recover(); rec != nil {
 			trace := debug.Stack()
 			err = fmt.Errorf("PANIC [%v] TRACE[%s]", rec, string(trace))
+
+			// Add the panic to the metrics.
+			metrics.AddPanics(ctx)
 		}
 	}()
 
