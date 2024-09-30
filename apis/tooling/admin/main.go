@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
+	"embed"
 	"encoding/pem"
 	"errors"
 	"fmt"
@@ -24,11 +25,20 @@ func main() {
 	}
 }
 
+//go:embed rego/*.rego
+var folder embed.FS
+
 //go:embed rego/authentication.rego
 var opaAuthentication string
 
 // GenToken generates a JWT for the specified user.
 func GenToken() error {
+
+	content, err := folder.ReadFile("rego/authentication.rego")
+	if err != nil {
+		return fmt.Errorf("reading rego file: %w", err)
+	}
+	opaAuthentication = string(content)
 
 	// Generating a token requires defining a set of claims. In this applications
 	// case, we only care about defining the subject and the user in question and
