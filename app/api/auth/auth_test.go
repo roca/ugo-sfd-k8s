@@ -10,7 +10,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"github.com/roca/ugo-sfd-k8s/business/api/auth"
+	"github.com/roca/ugo-sfd-k8s/app/api/auth"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
 )
 
