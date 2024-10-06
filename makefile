@@ -31,6 +31,13 @@ curl-panic:
 admin:
 	go run apis/tooling/admin/main.go
 
+# admin token 
+# export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNzU5NzM5MDQ4LCJpYXQiOjE3MjgyMDMwNDgsInJvbGVzIjpbIkFETUlOIl19.Nvbg9bLnv8l1G8H0oKyQb_lySI6yXVfbjFbDfj9tcdCVCw5fO33txDEAFUoOTEZ-6HGVQtqUeYkWnTkVOeWiiDMreltHQvFs02Tpx0UOh-JrDVIkvW-Nz7Npuo-GW3xLU4Tb91ie7Ft984mU4f0-JrUe825CgeHStdgVrWSUkov10WW0TQzGHOFdO-2Z-jpyx9eEEv__DIawQ_itPs7Iidm7xQwFmEYDuXvxm4EZCbgIpy7ZDLGG8nvSRwd0Ee2X7czo-G5ibvUqHBJlc7hgPi-5p36jM12XmAskuiCv9rjDL1DlnqLC8P6sdzogvTxtbH3yRI6sV51xYXSk03AK1Q
+
+curl-auth:
+	curl -il \
+	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/testauth"
+	
 # ==============================================================================
 # Define dependencies
 
