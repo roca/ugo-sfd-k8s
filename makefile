@@ -34,10 +34,11 @@ admin:
 # admin token 
 # export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNzU5NzM5MDQ4LCJpYXQiOjE3MjgyMDMwNDgsInJvbGVzIjpbIkFETUlOIl19.Nvbg9bLnv8l1G8H0oKyQb_lySI6yXVfbjFbDfj9tcdCVCw5fO33txDEAFUoOTEZ-6HGVQtqUeYkWnTkVOeWiiDMreltHQvFs02Tpx0UOh-JrDVIkvW-Nz7Npuo-GW3xLU4Tb91ie7Ft984mU4f0-JrUe825CgeHStdgVrWSUkov10WW0TQzGHOFdO-2Z-jpyx9eEEv__DIawQ_itPs7Iidm7xQwFmEYDuXvxm4EZCbgIpy7ZDLGG8nvSRwd0Ee2X7czo-G5ibvUqHBJlc7hgPi-5p36jM12XmAskuiCv9rjDL1DlnqLC8P6sdzogvTxtbH3yRI6sV51xYXSk03AK1Q
 
+export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiJlMDAzMzdkNS1mY2JiLTRkOWYtYTk5Yy0zZGY3ODRlZWQ1ZWMiLCJleHAiOjE3NTk4Mjg1NTUsImlhdCI6MTcyODI5MjU1NSwicm9sZXMiOlsiQURNSU4iXX0.SAgu8CX7H_UYD7SomxdhC-7Gd_unQ1NITeRtWZP4b-ofpzJb1GeowXfGkRG7wKE_3i1x0sj7PGMSLhJ9ywSy56mc1zwITF5pzltihPMp-Qkp-O-wZ9LPKP1tHF2iHQBbgNwHIVkZitwZ--qGsmuxJZpe8my5UZ-8iXoOax__mZ6NNzVbT9HBO4dREtkUkoWC6rDIKSe13qQcu--lI7-5gXY-RIFJkzqFKunTh1Pfb3PtKMYTALdfa4q0oB_Q_HZ0oCAIaOa-wuYMDYH4r40RtmOAfj9--e5y1ULO1xq-HaizXiKWfLwDAoA-Yipa7ojHx-eP3bewC0tAJAWn1OzwfA
 curl-auth:
 	curl -il \
 	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/testauth"
-	
+
 # ==============================================================================
 # Define dependencies
 
