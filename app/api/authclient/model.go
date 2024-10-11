@@ -21,3 +21,10 @@ type Authorize struct {
 	UserID uuid.UUID
 	Rule   string
 }
+
+// AuthenticateResp defines the information that will be received on authenticate.
+type AuthenticateResp struct {
+	UserID uuid.UUID
+	Claims auth.Claims
+}
+
