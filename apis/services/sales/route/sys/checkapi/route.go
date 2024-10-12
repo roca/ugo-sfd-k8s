@@ -3,12 +3,13 @@ package checkapi
 import (
 	"github.com/roca/ugo-sfd-k8s/apis/services/api/mid"
 	"github.com/roca/ugo-sfd-k8s/app/api/auth"
+	"github.com/roca/ugo-sfd-k8s/app/api/authclient"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
 
-func Routes(app *web.App, a *auth.Auth) {
-	authen := mid.Authorization(a)
-	athAdminOnly := mid.Authorize(a, auth.RuleAdminOnly)
+func Routes(app *web.App, authClient *authclient.Client) {
+	authen := mid.Authorization(authClient)
+	athAdminOnly := mid.Authorize(authClient, auth.RuleAdminOnly)
 
 	app.HandleFuncNoMiddleware("GET /liveliness", liveliness)
 	app.HandleFuncNoMiddleware("GET /readiness", readiness)

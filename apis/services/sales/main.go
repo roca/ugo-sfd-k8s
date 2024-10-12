@@ -15,8 +15,7 @@ import (
 	"github.com/ardanlabs/conf/v3"
 	"github.com/roca/ugo-sfd-k8s/apis/services/api/debug"
 	"github.com/roca/ugo-sfd-k8s/apis/services/sales/mux"
-	"github.com/roca/ugo-sfd-k8s/app/api/auth"
-	"github.com/roca/ugo-sfd-k8s/foundation/keystore"
+	"github.com/roca/ugo-sfd-k8s/app/api/authclient"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
@@ -66,9 +65,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 			CORSAllowedOrigins []string      `conf:"default:*,mask"`
 		}
 		Auth struct {
-			KeysFolder string `conf:"default:zarf/keys/"`
-			ActiveKID  string `conf:"default:54bb2165-71e1-41a6-af3e-7da4a0e1e2c1"`
-			Issuer     string `conf:"default:service project"`
+			Host string `conf:"default:http://auth-service.sales-system.svc.cluster.local:6000"`
 		}
 	}{
 		Version: conf.Version{
@@ -106,23 +103,10 @@ func run(ctx context.Context, log *logger.Logger) error {
 
 	log.Info(ctx, "startup", "status", "initializing authentication support")
 
-	// Load the private keys files from disk. We can assume some system like
-	// Vault has created these files already. How that happens is not our
-	// concern.
-	ks := keystore.New()
-	if err := ks.LoadRSAKeys(os.DirFS(cfg.Auth.KeysFolder)); err != nil {
-		return fmt.Errorf("reading keys: %w", err)
+	logFunc := func(ctx context.Context, msg string, v ...any) {
+		log.Info(ctx, msg, v...)
 	}
-
-	authCfg := auth.Config{
-		Log:       log,
-		KeyLookup: ks,
-	}
-
-	auth, err := auth.New(authCfg)
-	if err != nil {
-		return fmt.Errorf("constructing auth: %w", err)
-	}
+	authClient := authclient.New(cfg.Auth.Host, logFunc)
 
 	// -------------------------------------------------------------------------
 	// Start Debug Service
@@ -145,7 +129,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      mux.WebAPI(log, auth, shutdown),
+		Handler:      mux.WebAPI(log, authClient, shutdown),
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,
