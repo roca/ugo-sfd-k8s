@@ -4,12 +4,13 @@ import (
 	"github.com/roca/ugo-sfd-k8s/apis/services/api/mid"
 	"github.com/roca/ugo-sfd-k8s/app/api/auth"
 	"github.com/roca/ugo-sfd-k8s/app/api/authclient"
+	"github.com/roca/ugo-sfd-k8s/foundation/logger"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
 
-func Routes(app *web.App, authClient *authclient.Client) {
-	authen := mid.Authorization(authClient)
-	athAdminOnly := mid.Authorize(authClient, auth.RuleAdminOnly)
+func Routes(app *web.App, log *logger.Logger, authClient *authclient.Client) {
+	authen := mid.AuthenticateService(log, authClient)
+	athAdminOnly := mid.AuthorizeService(log, authClient, auth.RuleAdminOnly)
 
 	app.HandleFuncNoMiddleware("GET /liveliness", liveliness)
 	app.HandleFuncNoMiddleware("GET /readiness", readiness)

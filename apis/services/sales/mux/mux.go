@@ -22,7 +22,7 @@ func WebAPI(log *logger.Logger, authClient *authclient.Client, shutdown chan os.
 
 	app := web.NewApp(shutdown, loggerMiddleware, errorsMiddleware, metricsMiddleware, panicMiddleware)
 
-	checkapi.Routes(app, authClient)
+	checkapi.Routes(app, log, authClient)
 
 	return app
 }
