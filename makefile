@@ -155,7 +155,7 @@ dev-status:
 
 dev-load-db:
 	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
-	
+
 dev-load:
 	kind load docker-image $(SALES_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(AUTH_IMAGE) --name $(KIND_CLUSTER)
@@ -202,6 +202,14 @@ metrics:
 	expvarmon -ports="localhost:3010" -vars="build,requests,goroutines,errors,panics,mem:memstats.HeapAlloc,mem:memstats.HeapSys,mem:memstats.Sys"
 statsviz:
 	open http://localhost:3010/debug/statsviz
+
+
+# ==============================================================================
+# Administration
+
+pgcli:
+	pgcli postgresql://postgres:postgres@localhost
+	
 # ==============================================================================
 #  Modules support
 
