@@ -6,6 +6,7 @@ toolchain go1.23.0
 
 require (
 	github.com/ardanlabs/conf/v3 v3.1.8
+	github.com/ardanlabs/darwin/v3 v3.3.1
 	github.com/arl/statsviz v0.6.0
 	github.com/go-json-experiment/json v0.0.0-20240815175050-ebd3a8989ca1
 	github.com/golang-jwt/jwt/v4 v4.5.0
