@@ -13,10 +13,12 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
+	"github.com/roca/ugo-sfd-k8s/api/cmd/services/auth/build/all"
+	"github.com/roca/ugo-sfd-k8s/api/http/api/debug"
 	"github.com/roca/ugo-sfd-k8s/api/http/api/mux"
-	"github.com/roca/ugo-sfd-k8s/apis/services/api/debug"
-	"github.com/roca/ugo-sfd-k8s/app/api/authclient"
+	"github.com/roca/ugo-sfd-k8s/app/api/auth"
 	"github.com/roca/ugo-sfd-k8s/business/api/sqldb"
+	"github.com/roca/ugo-sfd-k8s/foundation/keystore"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
@@ -36,7 +38,7 @@ func main() {
 		return web.GetTraceID(ctx)
 	}
 
-	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "SALES", traceIDFn, events)
+	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "AUTH", traceIDFn, events)
 
 	// -------------------------------------------------------------------------
 
@@ -49,10 +51,14 @@ func main() {
 }
 
 func run(ctx context.Context, log *logger.Logger) error {
+
 	// -------------------------------------------------------------------------
 	// GOMAXPROCS
 
 	log.Info(ctx, "startup", "GOMAXPROCS", runtime.GOMAXPROCS(0))
+
+	// -------------------------------------------------------------------------
+	// Configuration
 
 	cfg := struct {
 		conf.Version
@@ -61,12 +67,14 @@ func run(ctx context.Context, log *logger.Logger) error {
 			WriteTimeout       time.Duration `conf:"default:10s"`
 			IdleTimeout        time.Duration `conf:"default:120s"`
 			ShutdownTimeout    time.Duration `conf:"default:20s"`
-			APIHost            string        `conf:"default:0.0.0.0:3000"`
-			DebugHost          string        `conf:"default:0.0.0.0:3010"`
-			CORSAllowedOrigins []string      `conf:"default:*,mask"`
+			APIHost            string        `conf:"default:0.0.0.0:6000"`
+			DebugHost          string        `conf:"default:0.0.0.0:6100"`
+			CORSAllowedOrigins []string      `conf:"default:*"`
 		}
 		Auth struct {
-			Host string `conf:"default:http://auth-service.sales-system.svc.cluster.local:6000"`
+			KeysFolder string `conf:"default:zarf/keys/"`
+			ActiveKID  string `conf:"default:54bb2165-71e1-41a6-af3e-7da4a0e1e2c1"`
+			Issuer     string `conf:"default:service project"`
 		}
 		DB struct {
 			User         string `conf:"default:postgres"`
@@ -80,11 +88,11 @@ func run(ctx context.Context, log *logger.Logger) error {
 	}{
 		Version: conf.Version{
 			Build: build,
-			Desc:  "Sales",
+			Desc:  "Auth",
 		},
 	}
 
-	const prefix = "SALES"
+	const prefix = "AUTH"
 	help, err := conf.Parse(prefix, &cfg)
 	if err != nil {
 		if errors.Is(err, conf.ErrHelpWanted) {
@@ -133,10 +141,23 @@ func run(ctx context.Context, log *logger.Logger) error {
 
 	log.Info(ctx, "startup", "status", "initializing authentication support")
 
-	logFunc := func(ctx context.Context, msg string, v ...any) {
-		log.Info(ctx, msg, v...)
+	// Load the private keys files from disk. We can assume some system like
+	// Vault has created these files already. How that happens is not our
+	// concern.
+	ks := keystore.New()
+	if err := ks.LoadRSAKeys(os.DirFS(cfg.Auth.KeysFolder)); err != nil {
+		return fmt.Errorf("reading keys: %w", err)
 	}
-	authClient := authclient.New(cfg.Auth.Host, logFunc)
+
+	authCfg := auth.Config{
+		Log:       log,
+		KeyLookup: ks,
+	}
+
+	ath, err := auth.New(authCfg)
+	if err != nil {
+		return fmt.Errorf("constructing auth: %w", err)
+	}
 
 	// -------------------------------------------------------------------------
 	// Start Debug Service
@@ -157,9 +178,16 @@ func run(ctx context.Context, log *logger.Logger) error {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
+	cfgMux := mux.Config{
+		Build: build,
+		Log:   log,
+		Auth:  ath,
+		DB:    db,
+	}
+
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      mux.WebAPI(build, log, db, authClient, shutdown),
+		Handler:      mux.WebAPI(cfgMux, all.Routes()),
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,

@@ -1,8 +1,8 @@
 package authclient
 
 import (
-	"github.com/roca/ugo-sfd-k8s/app/api/auth"
 	"github.com/google/uuid"
+	"github.com/roca/ugo-sfd-k8s/app/api/auth"
 )
 
 // Error represents an error in the system.
@@ -27,4 +27,3 @@ type AuthenticateResp struct {
 	UserID uuid.UUID
 	Claims auth.Claims
 }
-

@@ -13,8 +13,9 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
+	"github.com/roca/ugo-sfd-k8s/api/cmd/services/sales/build/all"
+	"github.com/roca/ugo-sfd-k8s/api/http/api/debug"
 	"github.com/roca/ugo-sfd-k8s/api/http/api/mux"
-	"github.com/roca/ugo-sfd-k8s/apis/services/api/debug"
 	"github.com/roca/ugo-sfd-k8s/app/api/authclient"
 	"github.com/roca/ugo-sfd-k8s/business/api/sqldb"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
@@ -49,10 +50,14 @@ func main() {
 }
 
 func run(ctx context.Context, log *logger.Logger) error {
+
 	// -------------------------------------------------------------------------
 	// GOMAXPROCS
 
 	log.Info(ctx, "startup", "GOMAXPROCS", runtime.GOMAXPROCS(0))
+
+	// -------------------------------------------------------------------------
+	// Configuration
 
 	cfg := struct {
 		conf.Version
@@ -157,9 +162,16 @@ func run(ctx context.Context, log *logger.Logger) error {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
+	cfgMux := mux.Config{
+		Build:      build,
+		Log:        log,
+		AuthClient: authClient,
+		DB:         db,
+	}
+
 	api := http.Server{
 		Addr:         cfg.Web.APIHost,
-		Handler:      mux.WebAPI(build, log, db, authClient, shutdown),
+		Handler:      mux.WebAPI(cfgMux, all.Routes()),
 		ReadTimeout:  cfg.Web.ReadTimeout,
 		WriteTimeout: cfg.Web.WriteTimeout,
 		IdleTimeout:  cfg.Web.IdleTimeout,

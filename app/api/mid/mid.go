@@ -1,4 +1,4 @@
-// Pckage: mid provides app level middleware support.
+// Package mid provides app level middleware support.
 package mid
 
 import (
@@ -9,7 +9,7 @@ import (
 	"github.com/roca/ugo-sfd-k8s/app/api/auth"
 )
 
-// Handler represents the handler function that need to be called.
+// Handler represents the handler function that needs to be called.
 type Handler func(context.Context) error
 
 type ctxKey int
@@ -36,7 +36,7 @@ func setUserID(ctx context.Context, userID uuid.UUID) context.Context {
 	return context.WithValue(ctx, userIDKey, userID)
 }
 
-// GetUserID returns the user id from the context.
+// GetUserID returns the claims from the context.
 func GetUserID(ctx context.Context) (uuid.UUID, error) {
 	v, ok := ctx.Value(userIDKey).(uuid.UUID)
 	if !ok {

@@ -6,7 +6,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
-	"embed"
+	_ "embed"
 	"encoding/pem"
 	"errors"
 	"fmt"
@@ -23,7 +23,7 @@ import (
 func main() {
 	err := Migrate()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 }
 
@@ -62,20 +62,11 @@ func Migrate() error {
 	return nil
 }
 
-//go:embed rego/*.rego
-var folder embed.FS
-
 //go:embed rego/authentication.rego
 var opaAuthentication string
 
 // GenToken generates a JWT for the specified user.
 func GenToken() error {
-
-	content, err := folder.ReadFile("rego/authentication.rego")
-	if err != nil {
-		return fmt.Errorf("reading rego file: %w", err)
-	}
-	opaAuthentication = string(content)
 
 	// Generating a token requires defining a set of claims. In this applications
 	// case, we only care about defining the subject and the user in question and
@@ -90,10 +81,10 @@ func GenToken() error {
 	// jti (JWT ID): Unique identifier; can be used to prevent the JWT from being replayed (allows a token to be used only once)
 	claims := struct {
 		jwt.RegisteredClaims
-		Roles []string `json:"roles,omitempty"`
+		Roles []string
 	}{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject:   "e00337d5-fcbb-4d9f-a99c-3df784eed5ec",
+			Subject:   "38dc9d84-018b-4a15-b958-0b78af11c301",
 			Issuer:    "service project",
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(8760 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
@@ -107,7 +98,7 @@ func GenToken() error {
 
 	privateKeyPEM, err := os.ReadFile("zarf/keys/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1.pem")
 	if err != nil {
-		return fmt.Errorf("reading private key pem: %w", err)
+		return fmt.Errorf("reading private pem: %w", err)
 	}
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM(privateKeyPEM)
@@ -115,14 +106,14 @@ func GenToken() error {
 		return fmt.Errorf("parsing private pem: %w", err)
 	}
 
-	tokenStr, err := token.SignedString(privateKey)
+	str, err := token.SignedString(privateKey)
 	if err != nil {
 		return fmt.Errorf("signing token: %w", err)
 	}
 
-	fmt.Printf("-----BEGIN TOKEN-----\n%s\n-----END TOKEN-----\n\n", tokenStr)
+	fmt.Printf("-----BEGIN TOKEN-----\n%s\n-----END TOKEN-----\n\n", str)
 
-	// ------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	// Marshal the public key from the private key to PKIX.
 	asn1Bytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
@@ -146,11 +137,11 @@ func GenToken() error {
 		return fmt.Errorf("encoding to public file: %w", err)
 	}
 
-	//----------------------------------------------------------------
-
-	query := fmt.Sprintf("x = data.%s.%s", "ardan.rego", "auth")
+	// -------------------------------------------------------------------------
 
 	ctx := context.Background()
+	query := fmt.Sprintf("x = data.%s.%s", "ardan.rego", "auth")
+
 	q, err := rego.New(
 		rego.Query(query),
 		rego.Module("policy.rego", opaAuthentication),
@@ -161,7 +152,7 @@ func GenToken() error {
 
 	input := map[string]any{
 		"Key":   b.String(),
-		"Token": tokenStr,
+		"Token": str,
 		"ISS":   "service project",
 	}
 
@@ -211,7 +202,7 @@ func GenKey() error {
 		return fmt.Errorf("encoding to private file: %w", err)
 	}
 
-	//----------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	// Create a file for the public key information in PEM form.
 	publicFile, err := os.Create("public.pem")
@@ -238,5 +229,6 @@ func GenKey() error {
 	}
 
 	fmt.Println("private and public key files generated")
+
 	return nil
 }
