@@ -1,3 +1,4 @@
+// Package all binds all the routes into the specified app.
 package all
 
 import (

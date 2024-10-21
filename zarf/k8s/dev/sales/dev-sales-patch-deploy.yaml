@@ -9,17 +9,12 @@ spec:
 
   strategy:
     type: Recreate
-  
+
   template:
-    metadata:
-      labels:
-        app: sales
     spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
 
-      containers:
-      - name: sales
 # CPU Limits
 #
 # The request value helps K8s determine what node a POD can be run on by making
@@ -132,3 +127,13 @@ spec:
 #   Fastest:       0.0033 secs     Fastest:       0.0046 secs
 #   Average:       0.3369 secs     Average:       0.2690 secs
 #   Requests/sec: 29.2980          Requests/sec: 35.8689
+
+      containers:
+      - name: sales
+        resources:
+          requests:
+            cpu: "250m"     # I need access to 25ms/100ms on one core
+            memory: "36Mi"  # Use this same value for limits
+          limits:
+            cpu: "250m"     # Execute instructions 25ms/100ms on one core
+            memory: "36Mi"  # Match the requests value

@@ -19,7 +19,6 @@ func Panics(ctx context.Context, handler Handler) (err error) {
 			trace := debug.Stack()
 			err = fmt.Errorf("PANIC [%v] TRACE[%s]", rec, string(trace))
 
-			// Add the panic to the metrics.
 			metrics.AddPanics(ctx)
 		}
 	}()

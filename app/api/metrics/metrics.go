@@ -1,3 +1,4 @@
+// Package metrics constructs the metrics the application will track.
 package metrics
 
 import (
@@ -84,4 +85,3 @@ func AddPanics(ctx context.Context) int64 {
 
 	return 0
 }
-

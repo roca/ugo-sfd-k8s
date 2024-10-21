@@ -16,8 +16,11 @@ help:
 version:
 	go run apis/services/sales/main.go --version
 
+curl-test:
+	curl -il -X GET http://localhost:3000/test
+
 curl-live:
-	curl -il -X GET http://localhost:3000/liveliness
+	curl -il -X GET http://localhost:3000/liveness
 
 curl-ready:
 	curl -il -X GET http://localhost:3000/readiness
@@ -31,11 +34,11 @@ curl-panic:
 admin:
 	go run apis/tooling/admin/main.go
 
-# admin token 
-# export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiJlMDAzMzdkNS1mY2JiLTRkOWYtYTk5Yy0zZGY3ODRlZWQ1ZWMiLCJleHAiOjE3NTk4Mjg1NTUsImlhdCI6MTcyODI5MjU1NSwicm9sZXMiOlsiQURNSU4iXX0.SAgu8CX7H_UYD7SomxdhC-7Gd_unQ1NITeRtWZP4b-ofpzJb1GeowXfGkRG7wKE_3i1x0sj7PGMSLhJ9ywSy56mc1zwITF5pzltihPMp-Qkp-O-wZ9LPKP1tHF2iHQBbgNwHIVkZitwZ--qGsmuxJZpe8my5UZ-8iXoOax__mZ6NNzVbT9HBO4dREtkUkoWC6rDIKSe13qQcu--lI7-5gXY-RIFJkzqFKunTh1Pfb3PtKMYTALdfa4q0oB_Q_HZ0oCAIaOa-wuYMDYH4r40RtmOAfj9--e5y1ULO1xq-HaizXiKWfLwDAoA-Yipa7ojHx-eP3bewC0tAJAWn1OzwfA
+# admin token
+# export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiIzOGRjOWQ4NC0wMThiLTRhMTUtYjk1OC0wYjc4YWYxMWMzMDEiLCJleHAiOjE3NDU1OTY1MTEsImlhdCI6MTcxNDA2MDUxMSwiUm9sZXMiOlsiQURNSU4iXX0.nioy4PpggnfrwTxNTQKbviCs3duF53Q5jcoRQqdngQSv7lccKYgTmxzuyMano-Yd-KijtHBCZxWAOFEv5w6xGCfqmQRThKXzQXiHN5Cv0OGab5lmThPGRuCHv35lEQzImKU9E1skSwHvCwyX89pRJpnku9PKJMT_Z4oT6amwFA50HU8jSM8j1HQ0ao60jSMgELKFFb9m3u4ZKIj4w7qxwwV9JD2_wH8HWjt5P1L2V5YtnP9vgMOBZ617TTGRysDS8WXQGXqEAiVQVZSneJCUR-4HofXvOTYIKyQG3iUAs3WTf91EubJQbeW6cFmwudE4xx4t20EaVIUkMr00jFxHtg
 
 # user token
-# export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiJlMDAzMzdkNS1mY2JiLTRkOWYtYTk5Yy0zZGY3ODRlZWQ1ZWMiLCJleHAiOjE3NTk5MDg2NDIsImlhdCI6MTcyODM3MjY0Miwicm9sZXMiOlsiVVNFUiJdfQ.gIhIflZ_jbppoSuWa9zMsxrM_j-EvVzXwglDwvnSlXA-XQVhKFub0iTy_It3NhJQzcrjkltkZ6iIUtqhrrwb7OhujHDG4dyK9bO3jq_vbe4i1INEqT4mjJgnbdLCyvJfT6NjCjYEadBzPgG_9Q_KPP-FBP3KjZAgcmFBocU9k9GLQTNQ_K3DLtoZ2PSwM99WXFdEIRRU_KVDQ8MYB0X_GJRVvVc4F4NZrF__vgiZc5SASZhlt0yOeohdol7rZ2ZE7tJy9HubxmFw16lY1OUMivGNynJKPKXGGsFC4Yc0Oz2y3UnC87UduRRO9rq-c3dOrvhfqXZ-IRBX5WxUEnZ1pQ
+# export TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjU0YmIyMTY1LTcxZTEtNDFhNi1hZjNlLTdkYTRhMGUxZTJjMSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzZXJ2aWNlIHByb2plY3QiLCJzdWIiOiIzOGRjOWQ4NC0wMThiLTRhMTUtYjk1OC0wYjc4YWYxMWMzMDEiLCJleHAiOjE3NDU1OTY1NTUsImlhdCI6MTcxNDA2MDU1NSwiUm9sZXMiOlsiVVNFUiJdfQ.bBomVD8igAkiXzKvsBQGj5Nb5ho2MYq-eOXeFjtfdauayE4lQamFtWHUjKq1KaIzMvxlybdU_37py620vOBrQ7tUIYTdY91ggf-AgakBTm3UTs494BjIv3rvPM0baXKSMSe8Ao2acjhTSPA9Crz0mEgWynd3gcuSXVAXrSO3eH8bPuBqR2Ohp1_JsE4Y_dj0Mfmzo8wRQHmBI-QVMT0udUlxVGsLhurGmFpLSrQ7Vzr-xuCJPMgjkTZmSvelCrxSeql6-scwZLTHjgqkzqIMS5EceyKAQfYuuRgqrwwIAtGhyM6SrPHH3WFEy2RHW2ebqQKa-fc3JAcJH44hgiiGsA
 
 curl-auth:
 	curl -il \
@@ -45,15 +48,18 @@ token:
 	curl -il \
 	--user "admin@example.com:gophers" http://localhost:6000/auth/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
 
+users:
+	curl -il \
+	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/users?page=1&rows=2"
+
 curl-auth2:
 	curl -il \
 	-H "Authorization: Bearer ${TOKEN}" "http://localhost:6000/auth/authenticate"
 
-
 # ==============================================================================
 # Define dependencies
 
-GOLANG          := golang:1.22
+GOLANG          := golang:1.23
 ALPINE          := alpine:3.19
 KIND            := kindest/node:v1.29.2
 POSTGRES        := postgres:16.2
@@ -72,38 +78,6 @@ VERSION         := 0.0.1
 SALES_IMAGE     := $(BASE_IMAGE_NAME)/$(SALES_APP):$(VERSION)
 METRICS_IMAGE   := $(BASE_IMAGE_NAME)/metrics:$(VERSION)
 AUTH_IMAGE      := $(BASE_IMAGE_NAME)/$(AUTH_APP):$(VERSION)
-
-# VERSION       := "0.0.1-$(shell git rev-parse --short HEAD)"
-
-# ==============================================================================
-# Install dependencies
-
-dev-gotooling:
-	go install github.com/divan/expvarmon@latest
-	go install github.com/rakyll/hey@latest
-	go install honnef.co/go/tools/cmd/staticcheck@latest
-	go install golang.org/x/vuln/cmd/govulncheck@latest
-	go install golang.org/x/tools/cmd/goimports@latest
-
-dev-brew:
-	brew update
-	brew list kind || brew install kind
-	brew list kubectl || brew install kubectl
-	brew list kustomize || brew install kustomize
-	brew list pgcli || brew install pgcli
-	brew list watch || brew install watch
-
-dev-docker:
-	docker pull $(GOLANG) & \
-	docker pull $(ALPINE) & \
-	docker pull $(KIND) & \
-	docker pull $(POSTGRES) & \
-	docker pull $(GRAFANA) & \
-	docker pull $(PROMETHEUS) & \
-	docker pull $(TEMPO) & \
-	docker pull $(LOKI) & \
-	docker pull $(PROMTAIL) & \
-	wait;
 
 # ==============================================================================
 # Building containers
@@ -142,7 +116,6 @@ dev-up:
 dev-down:
 	kind delete cluster --name $(KIND_CLUSTER)
 
-
 dev-status-all:
 	kubectl get nodes -o wide
 	kubectl get svc -o wide
@@ -151,7 +124,7 @@ dev-status-all:
 dev-status:
 	watch -n 2 kubectl get pods -o wide --all-namespaces
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
 
 dev-load-db:
 	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
@@ -203,18 +176,18 @@ dev-describe-auth:
 
 metrics:
 	expvarmon -ports="localhost:3010" -vars="build,requests,goroutines,errors,panics,mem:memstats.HeapAlloc,mem:memstats.HeapSys,mem:memstats.Sys"
-statsviz:
-	open http://localhost:3010/debug/statsviz
 
+statsviz:
+	open -a "Google Chrome" http://localhost:3010/debug/statsviz
 
 # ==============================================================================
 # Administration
 
 pgcli:
 	pgcli postgresql://postgres:postgres@localhost
-	
+
 # ==============================================================================
-#  Modules support
+# Modules support
 
 tidy:
 	go mod tidy

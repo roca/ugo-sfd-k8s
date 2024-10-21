@@ -50,21 +50,13 @@ spec:
 
         livenessProbe: # liveness probes mark the service alive or dead (to be restarted).
           httpGet:
-            path: /liveliness
+            path: /liveness
             port: 3000
           initialDelaySeconds: 2
           periodSeconds: 5
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 2
-
-        resources:
-          requests:
-            cpu: "250m"     # I need access to 25ms/100ms on one core
-            memory: "36Mi"  # Use this same value for limits
-          limits:
-            cpu: "250m"     # Execute instructions 25ms/100ms on one core
-            memory: "36Mi"  # Match the requests value
 
         env:
         - name: GOMAXPROCS
