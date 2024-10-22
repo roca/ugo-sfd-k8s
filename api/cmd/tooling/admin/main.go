@@ -21,8 +21,7 @@ import (
 )
 
 func main() {
-	// err := Migrate()
-	err := GenToken()
+	err := Migrate()
 	if err != nil {
 		log.Fatalln(err)
 	}
