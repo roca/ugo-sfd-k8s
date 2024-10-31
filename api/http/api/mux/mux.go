@@ -28,7 +28,7 @@ type RouteAdder interface {
 	Add(app *web.App, cfg Config)
 }
 
-// WebAPIAuth constructs a http.Handler with all application routes bound.
+// WebAPI constructs a http.Handler with all application routes bound.
 func WebAPI(cfg Config, routeAdder RouteAdder) *web.App {
 	logger := func(ctx context.Context, msg string, v ...any) {
 		cfg.Log.Info(ctx, msg, v...)

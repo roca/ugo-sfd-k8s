@@ -1,3 +1,6 @@
+/*
+Package testapi provides a simple API used for testing the foundation web
+*/
 package testapi
 
 import (

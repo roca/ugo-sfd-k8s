@@ -19,7 +19,7 @@ type Config struct {
 
 // Routes adds specific routes for this group.
 func Routes(app *web.App, cfg Config) {
-	const version = "v1"
+	// const version = "v1"
 
 	authen := mid.Authenticate(cfg.Log, cfg.AuthClient)
 	ruleAdmin := mid.Authorize(cfg.Log, cfg.AuthClient, auth.RuleAdminOnly)
