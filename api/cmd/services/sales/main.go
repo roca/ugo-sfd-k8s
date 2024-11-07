@@ -19,6 +19,7 @@ import (
 	"github.com/roca/ugo-sfd-k8s/app/api/authclient"
 	"github.com/roca/ugo-sfd-k8s/business/api/sqldb"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
+	"github.com/roca/ugo-sfd-k8s/foundation/tooling/environment"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
 
@@ -119,13 +120,13 @@ func run(ctx context.Context, log *logger.Logger) error {
 	log.Info(ctx, "startup", "status", "initializing database support", "hostport", cfg.DB.HostPort)
 
 	db, err := sqldb.Open(sqldb.Config{
-		User:         cfg.DB.User,
-		Password:     cfg.DB.Password,
-		HostPort:     cfg.DB.HostPort,
-		Name:         cfg.DB.Name,
+		User:         environment.GetStrEnv("SALES_DB_USER", cfg.DB.User),
+		Password:     environment.GetStrEnv("SALES_DB_PASSWORD", cfg.DB.Password),
+		HostPort:     environment.GetStrEnv("SALES_DB_HOST_PORT", cfg.DB.HostPort),
+		Name:         environment.GetStrEnv("SALES_DB_NAME", cfg.DB.Name),
 		MaxIdleConns: cfg.DB.MaxIdleConns,
 		MaxOpenConns: cfg.DB.MaxOpenConns,
-		DisableTLS:   cfg.DB.DisableTLS,
+		DisableTLS:   environment.GetBoolEnv("SALES_DB_DISABLE_TLS", cfg.DB.DisableTLS),
 	})
 	if err != nil {
 		return fmt.Errorf("connecting to db: %w", err)

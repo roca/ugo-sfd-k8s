@@ -16,6 +16,7 @@ import (
 	"github.com/roca/ugo-sfd-k8s/business/domain/userbus/stores/userdb"
 	"github.com/roca/ugo-sfd-k8s/foundation/docker"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
+	"github.com/roca/ugo-sfd-k8s/foundation/tooling/environment"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
 
@@ -77,11 +78,11 @@ func NewDatabase(t *testing.T, c *docker.Container, testName string) *Database {
 	defer cancel()
 
 	dbM, err := sqldb.Open(sqldb.Config{
-		User:       "postgres",
-		Password:   "postgres",
-		HostPort:   c.HostPort,
-		Name:       "postgres",
-		DisableTLS: true,
+		User:       environment.GetStrEnv("SALES_DB_USER", "postgres"),
+		Password:   environment.GetStrEnv("SALES_DB_PASSWORD", "postgres"),
+		HostPort:   environment.GetStrEnv("SALES_DB_HOST_PORT", "database-service.sales-system.svc.cluster.local"),
+		Name:       environment.GetStrEnv("SALES_DB_NAME", "postgres"),
+		DisableTLS: environment.GetBoolEnv("SALES_DB_DISABLE_TLS", true),
 	})
 	if err != nil {
 		t.Fatalf("Opening database connection: %v", err)

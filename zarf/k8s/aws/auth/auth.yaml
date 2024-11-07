@@ -8,6 +8,7 @@ data:
   db_disabletls: "true"
   db_hostport: database-service.sales-system.svc.cluster.local
   db_password: postgres
+  db_name: postgres
   db_user: postgres
 kind: ConfigMap
 metadata:
@@ -76,6 +77,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: db_disabletls
+              name: app-config
+              optional: true
+        - name: SALES_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: db_name
               name: app-config
               optional: true
         - name: KUBERNETES_NAMESPACE

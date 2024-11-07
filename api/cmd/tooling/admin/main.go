@@ -18,6 +18,7 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/roca/ugo-sfd-k8s/business/api/migrate"
 	"github.com/roca/ugo-sfd-k8s/business/api/sqldb"
+	"github.com/roca/ugo-sfd-k8s/foundation/tooling/environment"
 )
 
 func main() {
@@ -30,13 +31,13 @@ func main() {
 // Migrate creates the schema in the database.
 func Migrate() error {
 	dbConfig := sqldb.Config{
-		User:         "postgres",
-		Password:     "postgres",
-		HostPort:     "database-service.sales-system.svc.cluster.local",
-		Name:         "postgres",
+		User:         environment.GetStrEnv("SALES_DB_USER", "postgres"),
+		Password:     environment.GetStrEnv("SALES_DB_PASSWORD", "postgres"),
+		HostPort:     environment.GetStrEnv("SALES_DB_HOST_PORT", "database-service.sales-system.svc.cluster.local"),
+		Name:         environment.GetStrEnv("SALES_DB_NAME", "postgres"),
 		MaxIdleConns: 2,
 		MaxOpenConns: 0,
-		DisableTLS:   true,
+		DisableTLS:   environment.GetBoolEnv("SALES_DB_DISABLE_TLS", true),
 	}
 
 	db, err := sqldb.Open(dbConfig)
