@@ -117,7 +117,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 	// -------------------------------------------------------------------------
 	// Database Support
 
-	log.Info(ctx, "startup", "status", "initializing database support", "hostport", cfg.DB.HostPort)
+	log.Info(ctx, "startup", "status", "initializing database support", "hostport",  environment.GetStrEnv("SALES_DB_HOST_PORT", cfg.DB.HostPort))
 
 	db, err := sqldb.Open(sqldb.Config{
 		User:         environment.GetStrEnv("SALES_DB_USER", cfg.DB.User),
