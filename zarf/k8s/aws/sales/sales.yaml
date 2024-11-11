@@ -6,8 +6,8 @@ metadata:
 apiVersion: v1
 data:
   db_disabletls: "true"
-  db_hostport: database-service.sales-system.svc.cluster.local
-  db_password: postgres
+  db_hostport: postgres.csuabtqjbyud.us-east-1.rds.amazonaws.com
+  db_password: admin123
   db_name: postgres
   db_user: postgres
 kind: ConfigMap
@@ -108,6 +108,7 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         image: 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/sales:latest
+        imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 2
           httpGet:

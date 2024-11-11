@@ -14,6 +14,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
+	"github.com/roca/ugo-sfd-k8s/foundation/tooling/environment"
 )
 
 // lib/pq errorCodeNames
@@ -58,9 +59,9 @@ func Open(cfg Config) (*sqlx.DB, error) {
 
 	u := url.URL{
 		Scheme:   "postgres",
-		User:     url.UserPassword(cfg.User, cfg.Password),
-		Host:     cfg.HostPort,
-		Path:     cfg.Name,
+		User:     url.UserPassword(environment.GetStrEnv("SALES_DB_USER", cfg.User), environment.GetStrEnv("SALES_DB_PASSWORD", cfg.Password)),
+		Host:     environment.GetStrEnv("SALES_DB_HOST_PORT",cfg.HostPort),
+		Path:     environment.GetStrEnv("SALES_DB_NAME",cfg.Name),
 		RawQuery: q.Encode(),
 	}
 
