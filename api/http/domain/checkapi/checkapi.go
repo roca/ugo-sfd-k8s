@@ -3,6 +3,7 @@ package checkapi
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"runtime"
@@ -36,7 +37,7 @@ func (api *api) readiness(ctx context.Context, w http.ResponseWriter, r *http.Re
 	statusCode := http.StatusOK
 
 	if err := sqldb.StatusCheck(ctx, api.db); err != nil {
-		status = "db not ready"
+		status = fmt.Sprintf("db not ready: %s",err)
 		statusCode = http.StatusInternalServerError
 		api.log.Info(ctx, "readiness failure", "status", status)
 	}
