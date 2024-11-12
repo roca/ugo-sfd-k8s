@@ -59,7 +59,13 @@ spec:
           valueFrom:
             resourceFieldRef:
               resource: limits.cpu
-
+              
+        - name: SALES_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: db_name
+              name: app-config
+              optional: true
         - name: SALES_DB_USER # here as an example for configuring a hosted db.
           valueFrom:
             configMapKeyRef:
