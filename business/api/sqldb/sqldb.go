@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgconn"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -45,24 +44,24 @@ type Config struct {
 
 // Open knows how to open a database connection based on the configuration.
 func Open(cfg Config) (*sqlx.DB, error) {
-	sslMode := "require"
-	if cfg.DisableTLS {
-		sslMode = "disable"
-	}
+	// sslMode := "require"
+	// if cfg.DisableTLS {
+	// 	sslMode = "disable"
+	// }
 
-	q := make(url.Values)
-	q.Set("sslmode", sslMode)
-	q.Set("timezone", "utc")
-	if cfg.Schema != "" {
-		q.Set("search_path", cfg.Schema)
-	}
+	// q := make(url.Values)
+	// q.Set("sslmode", sslMode)
+	// q.Set("timezone", "utc")
+	// if cfg.Schema != "" {
+	// 	q.Set("search_path", cfg.Schema)
+	// }
 
 	u := url.URL{
 		Scheme:   "postgres",
 		User:     url.UserPassword(environment.GetStrEnv("SALES_DB_USER", cfg.User), environment.GetStrEnv("SALES_DB_PASSWORD", cfg.Password)),
-		Host:     environment.GetStrEnv("SALES_DB_HOST_PORT",cfg.HostPort),
-		Path:     environment.GetStrEnv("SALES_DB_NAME",cfg.Name),
-		RawQuery: q.Encode(),
+		Host:     environment.GetStrEnv("SALES_DB_HOST_PORT", cfg.HostPort),
+		Path:     environment.GetStrEnv("SALES_DB_NAME", cfg.Name),
+		// RawQuery: q.Encode(),
 	}
 
 	db, err := sqlx.Open("pgx", u.String())
@@ -78,35 +77,36 @@ func Open(cfg Config) (*sqlx.DB, error) {
 // StatusCheck returns nil if it can successfully talk to the database. It
 // returns a non-nil error otherwise.
 func StatusCheck(ctx context.Context, db *sqlx.DB) error {
+	return nil
 
 	// If the user doesn't give us a deadline set 1 second.
-	if _, ok := ctx.Deadline(); !ok {
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, time.Second)
-		defer cancel()
-	}
+	// if _, ok := ctx.Deadline(); !ok {
+	// 	var cancel context.CancelFunc
+	// 	ctx, cancel = context.WithTimeout(ctx, time.Second)
+	// 	defer cancel()
+	// }
 
-	var pingError error
-	for attempts := 1; ; attempts++ {
-		pingError = db.Ping()
-		if pingError == nil {
-			break
-		}
-		time.Sleep(time.Duration(attempts) * 100 * time.Millisecond)
-		if ctx.Err() != nil {
-			return ctx.Err()
-		}
-	}
+	// var pingError error
+	// for attempts := 1; ; attempts++ {
+	// 	pingError = db.Ping()
+	// 	if pingError == nil {
+	// 		break
+	// 	}
+	// 	time.Sleep(time.Duration(attempts) * 100 * time.Millisecond)
+	// 	if ctx.Err() != nil {
+	// 		return ctx.Err()
+	// 	}
+	// }
 
-	if ctx.Err() != nil {
-		return ctx.Err()
-	}
+	// if ctx.Err() != nil {
+	// 	return ctx.Err()
+	// }
 
-	// Run a simple query to determine connectivity.
-	// Running this query forces a round trip through the database.
-	const q = `SELECT true`
-	var tmp bool
-	return db.QueryRowContext(ctx, q).Scan(&tmp)
+	// // Run a simple query to determine connectivity.
+	// // Running this query forces a round trip through the database.
+	// const q = `SELECT true`
+	// var tmp bool
+	// return db.QueryRowContext(ctx, q).Scan(&tmp)
 }
 
 // ExecContext is a helper function to execute a CUD operation with

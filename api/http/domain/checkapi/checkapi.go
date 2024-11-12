@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"runtime"
 	"time"
@@ -12,6 +13,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/roca/ugo-sfd-k8s/business/api/sqldb"
 	"github.com/roca/ugo-sfd-k8s/foundation/logger"
+	"github.com/roca/ugo-sfd-k8s/foundation/tooling/environment"
 	"github.com/roca/ugo-sfd-k8s/foundation/web"
 )
 
@@ -36,8 +38,27 @@ func (api *api) readiness(ctx context.Context, w http.ResponseWriter, r *http.Re
 	status := "ok"
 	statusCode := http.StatusOK
 
+	sslMode := "require"
+	if environment.GetBoolEnv("SALES_DB_DISABLE_TLS", true) {
+		sslMode = "disable"
+	}
+
+	q := make(url.Values)
+	q.Set("sslmode", sslMode)
+	q.Set("timezone", "utc")
+
+	// psql --host=$SALES_DB_HOST_PORT --port=5432 --dbname=$SALES_DB_NAME --username=$SALES_DB_USER
+
+	u := url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(environment.GetStrEnv("SALES_DB_USER", "postgres"), environment.GetStrEnv("SALES_DB_PASSWORD", "postgres")),
+		Host:     environment.GetStrEnv("SALES_DB_HOST_PORT", "database-service.sales-system.svc.cluster.local"),
+		Path:     environment.GetStrEnv("SALES_DB_NAME", "postgres"),
+		RawQuery: q.Encode(),
+	}
+
 	if err := sqldb.StatusCheck(ctx, api.db); err != nil {
-		status = fmt.Sprintf("db not ready: %s",err)
+		status = fmt.Sprintf("db not ready: %s, '%s'", u.String(), err)
 		statusCode = http.StatusInternalServerError
 		api.log.Info(ctx, "readiness failure", "status", status)
 	}

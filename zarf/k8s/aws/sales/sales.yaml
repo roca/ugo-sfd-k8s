@@ -147,4 +147,35 @@ spec:
         - ./admin
         image: 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/sales:latest
         name: init-migrate-seed
+        env:
+        - name: SALES_DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: db_user
+              name: app-config
+              optional: true
+        - name: SALES_DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: db_password
+              name: app-config
+              optional: true
+        - name: SALES_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: db_name
+              name: app-config
+              optional: true
+        - name: SALES_DB_HOST_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: db_hostport
+              name: app-config
+              optional: true
+        - name: SALES_DB_DISABLE_TLS
+          valueFrom:
+            configMapKeyRef:
+              key: db_disabletls
+              name: app-config
+              optional: true
       terminationGracePeriodSeconds: 60
