@@ -1,0 +1,28 @@
+# Build the Go Binary.
+FROM golang:1.23 as build_client
+ENV CGO_ENABLED 0
+ARG BUILD_REF
+
+# Copy the source code into the container.
+COPY . /service
+
+# Build the admin binary.
+WORKDIR /service/client
+RUN go build -ldflags "-X main.build=${BUILD_REF}"
+
+FROM alpine:3.20
+ARG BUILD_DATE
+ARG BUILD_REF
+RUN addgroup -g 1000 -S client && \
+    adduser -u 1000 -h /service -G client -S client
+COPY --from=build_client --chown=client:client /service/client/client /service/client
+WORKDIR /service
+USER client
+CMD ["./client"]
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="web-client" \
+      org.opencontainers.image.authors="Romel Campbell <romelcampbell@gmail.com>" \
+      org.opencontainers.image.source="https://github.com/roca/ugo-sfd-k8s/tree/main/client" \
+      org.opencontainers.image.revision="${BUILD_REF}" \
+      org.opencontainers.image.vendor="RomelCampbell"
