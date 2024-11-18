@@ -151,6 +151,7 @@ dev-load-db:
 dev-load:
 	kind load docker-image $(SALES_IMAGE) --name $(KIND_CLUSTER)
 	kind load docker-image $(AUTH_IMAGE) --name $(KIND_CLUSTER)
+	kind load docker-image $(CLIENT_IMAGE) --name $(KIND_CLUSTER)
 
 dev-apply:
 	kustomize build zarf/k8s/dev/database | kubectl apply -f -
@@ -162,9 +163,13 @@ dev-apply:
 	kustomize build zarf/k8s/dev/sales | kubectl apply -f -
 	kubectl wait pods --namespace=$(NAMESPACE) --selector app=$(SALES_APP) --timeout=120s --for=condition=Ready
 
+	kustomize build zarf/k8s/dev/client | kubectl apply -f -
+	kubectl wait pods --namespace=$(NAMESPACE) --selector app=$(CLIENT_APP) --timeout=120s --for=condition=Ready
+
 dev-restart:
 	kubectl rollout restart deployment $(AUTH_APP) --namespace=$(NAMESPACE)
 	kubectl rollout restart deployment $(SALES_APP) --namespace=$(NAMESPACE)
+	kubectl rollout restart deployment $(CLIENT_APP) --namespace=$(NAMESPACE)
 
 dev-update: build dev-load dev-restart
 
@@ -189,6 +194,9 @@ dev-describe-sales:
 
 dev-describe-auth:
 	kubectl describe pod --namespace=$(NAMESPACE) -l app=$(AUTH_APP)
+
+dev-describe-client:
+	kubectl describe pod --namespace=$(NAMESPACE) -l app=$(CLIENT_APP)
 
 # ==============================================================================
 # Metrics and Tracing

@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base/client/
+patches:
+  - path: ./dev-client-patch-deploy.yaml
+  - path: ./dev-client-patch-service.yaml
+images:
+  - name: client-image
+    newName: localhost/ardanlabs/client
+    newTag: 0.0.1

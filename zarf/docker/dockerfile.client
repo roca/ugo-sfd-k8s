@@ -23,6 +23,6 @@ CMD ["./client"]
 LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opencontainers.image.title="web-client" \
       org.opencontainers.image.authors="Romel Campbell <romelcampbell@gmail.com>" \
-      org.opencontainers.image.source="https://github.com/roca/ugo-sfd-k8s/tree/main/client" \
+      org.opencontainers.image.source="https://github.com/roca/ugo-sfd-k8s/tree/main-infra/client" \
       org.opencontainers.image.revision="${BUILD_REF}" \
       org.opencontainers.image.vendor="RomelCampbell"
