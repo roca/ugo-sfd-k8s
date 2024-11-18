@@ -113,11 +113,13 @@ auth:
 tag-aws:
 	docker tag $(AUTH_IMAGE) 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/auth:latest
 	docker tag $(SALES_IMAGE) 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/sales:latest
+	docker tag $(CLIENT_IMAGE) 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/client:latest
 
 push-aws:
 	aws ecr get-login-password --region us-east-1 --profile k8suser | docker login --username AWS --password-stdin 132172135366.dkr.ecr.us-east-1.amazonaws.com
 	docker push 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/auth:latest
 	docker push 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/sales:latest
+	docker push 132172135366.dkr.ecr.us-east-1.amazonaws.com/ardanlabs/client:latest
 
 # ==============================================================================
 # Running from within k8s/kind
