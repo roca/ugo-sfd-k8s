@@ -2,7 +2,9 @@ package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 )
@@ -12,13 +14,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// token, err := getToken()
-	// if err != nil {
-	// 	log.Println(err)
-	// }
+	token, err := getToken()
+	if err != nil {
+		log.Println(err)
+	}
 
-	// fmt.Printf("Auth token: %s\n", token)
-	err := http.ListenAndServe(":8080", http.HandlerFunc(handler))
+	log.Printf("Auth token: %s\n", token)
+	err = http.ListenAndServe(":8080", http.HandlerFunc(handler))
 	if err != nil {
 		log.Println(err)
 	}
@@ -31,7 +33,7 @@ func basicAuth(username, password string) string {
 
 func getToken() (string, error) {
 
-	req, err := http.NewRequest("GET", "http://auth-service:8080/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1", nil)
+	req, err := http.NewRequest("GET", "http://auth-service.sales-system.svc.cluster.local:6000/auth/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1", nil)
 	if err != nil {
 		return "", err
 	}
@@ -41,11 +43,23 @@ func getToken() (string, error) {
 		return "", err
 	}
 
+	var tokenStruct struct {
+		Token string `json:"token"`
+	}
+
 	var tokenBytes []byte
-	_, err = resp.Body.Read(tokenBytes)
+
+	tokenBytes, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
 
-	return string(tokenBytes), nil
+	err = json.Unmarshal(tokenBytes, &tokenStruct)
+	if err != nil {
+		return "", err
+	}
+
+	log.Println(resp)
+
+	return tokenStruct.Token, nil
 }
