@@ -4,19 +4,19 @@ ENV CGO_ENABLED 0
 ARG BUILD_REF
 
 # Copy the source code into the container.
-COPY . /service
+COPY . /code
 
 # Build the admin binary.
-WORKDIR /service/client
+WORKDIR /code/api/cmd/frontends/client
 RUN go build -ldflags "-X main.build=${BUILD_REF}"
 
 FROM alpine:3.20
 ARG BUILD_DATE
 ARG BUILD_REF
 RUN addgroup -g 1000 -S client && \
-    adduser -u 1000 -h /service -G client -S client
-COPY --from=build_client --chown=client:client /service/client/client /service/client
-WORKDIR /service
+    adduser -u 1000 -h /code -G client -S client
+COPY --from=build_client --chown=client:client /code/api/cmd/frontends/client/client /code/client
+WORKDIR /code
 USER client
 CMD ["./client"]
 
